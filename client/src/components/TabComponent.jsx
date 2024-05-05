@@ -5,7 +5,7 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import JobCard from './JobCard';
 
-const TabComponent = () => {
+const TabComponent = ({ data }) => {
   return (
     <>
       <Tabs>
@@ -28,23 +28,39 @@ const TabComponent = () => {
           </div>
 
           <TabPanel>
-           <JobCard/>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {data?.length &&
+                data
+                  ?.filter((j) => j.category === "Web Development")
+                  .map((job) => <JobCard key={job?._id} job={job} />)}
+            </div>
           </TabPanel>
 
           <TabPanel>
-           <JobCard/>
-          </TabPanel>
-          
-          <TabPanel>
-           <JobCard/>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {data?.length &&
+                data
+                  ?.filter((j) => j.category === "Graphics Design")
+                  .map((job) => <JobCard key={job?._id} job={job} />)}
+            </div>
           </TabPanel>
 
+          <TabPanel>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {data?.length &&
+                data
+                  ?.filter((j) => j.category === "Digital Marketing")
+                  .map((job) => <JobCard key={job?._id} job={job} />)}
+            </div>
+          </TabPanel>
         </div>
       </Tabs>
     </>
   );
-}
+};
 
-TabComponent.propTypes = {}
+TabComponent.propTypes = {
+  data:PropTypes.array.isRequired
+};
 
 export default TabComponent
