@@ -20,6 +20,21 @@ const Login = () => {
 
   }
   // email and password signIn
+  const handleSignIn = async e =>{
+    e.preventDefault();
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
+    try {
+     const result = await signIn(email,password);
+     console.log(result);
+      toast.success("SignIn Successful");
+      navigate('/');
+    } catch (error) {
+        toast.error(error?.message)
+    }
+
+  }
 
 
   return (
@@ -80,7 +95,7 @@ const Login = () => {
 
             <span className="w-1/5 border-b dark:border-gray-400 lg:w-1/4"></span>
           </div>
-          <form>
+          <form onSubmit={handleSignIn}>
             <div className="mt-4">
               <label
                 className="block mb-2 text-sm font-medium text-gray-600 "
