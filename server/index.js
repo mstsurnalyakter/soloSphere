@@ -33,7 +33,8 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
 
-    const jobCollection = client.db("soloSphere").collection("jobs")
+    const jobCollection = client.db("soloSphere").collection("jobs");
+    const bidCollection = client.db("soloSphere").collection("bids");
 
     app.get("/jobs", async(req,res)=>{
         const result = await jobCollection.find().toArray();
@@ -42,6 +43,12 @@ async function run() {
     app.get("/jobs/:id", async(req,res)=>{
         const result = await jobCollection.findOne({_id: new ObjectId(req.params.id)});
         res.send(result);
+    })
+
+
+    app.post("/bids", async(req,res)=>{
+      const result = await bidCollection.insertOne(req.body);
+      res.send(result)
     })
 
     console.log(
