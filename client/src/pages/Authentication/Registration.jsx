@@ -5,8 +5,28 @@ import useContextData from "../../hooks/useContextData";
 import toast from "react-hot-toast";
 
 const Registration = () => {
-  const { createUser, signInWithGoogle, updateUserProfile } = useContextData();
+  const { createUser, signInWithGoogle, updateUserProfile,setUser,user } = useContextData();
   const navigate = useNavigate();
+
+
+  const handleSignUp = async e =>{
+     e.preventDefault();
+     const form = e.target;
+     const email = form.email.value;
+     const name = form.name.value;
+     const photo = form.photo.value;
+     const password = form.password.value;
+    try {
+      await createUser(email,password);
+      await updateUserProfile(name,photo);
+      setUser({...user,photoURL:photo,displayName:name});
+      navigate("/");
+      toast.success("SignUp Successful");
+
+    } catch (error) {
+      toast.error(error?.message)
+    }
+  }
 
   const handleGoogleSignIn = async () =>{
    try {
@@ -70,7 +90,7 @@ const Registration = () => {
 
             <span className="w-1/5 border-b dark:border-gray-400 lg:w-1/4"></span>
           </div>
-          <form>
+          <form onSubmit={handleSignUp}>
             <div className="mt-4">
               <label
                 className="block mb-2 text-sm font-medium text-gray-600 "
