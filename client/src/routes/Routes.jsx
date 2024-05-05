@@ -23,8 +23,9 @@ const router = createBrowserRouter([
         element: <Registration />,
       },
       {
-        path: "`/job/:id`",
-        element:<JobDetails/>
+        path: "/job/:id",
+        element: <JobDetails />,
+        loader: ({ params }) => fetch(`${import.meta.env.VITE_API_URL}/jobs/${params.id}`),
       },
     ],
   },

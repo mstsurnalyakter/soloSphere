@@ -1,24 +1,34 @@
+import { useEffect } from "react";
+import {useLoaderData, useParams} from "react-router-dom"
+
 const JobDetails = () => {
+  const job = useLoaderData();
+
+  const { _id, jobTitle, description, minPrice, maxPrice, category, deadline } =
+    job || {};
+
+
+
   return (
     <div className="flex flex-col md:flex-row justify-around gap-5  items-center min-h-[calc(100vh-306px)] md:max-w-screen-xl mx-auto ">
       {/* Job Details */}
       <div className="flex-1  px-4 py-7 bg-white rounded-md shadow-md md:min-h-[350px]">
         <div className="flex items-center justify-between">
           <span className="text-sm font-light text-gray-800 ">
-            Deadline: 12/08/2024
+            Deadline: {deadline}
           </span>
           <span className="px-4 py-1 text-xs text-blue-800 uppercase bg-blue-200 rounded-full ">
-            Web Development
+           {category}
           </span>
         </div>
 
         <div>
           <h1 className="mt-2 text-3xl font-semibold text-gray-800 ">
-            Build Dynamic Website
+           {jobTitle}
           </h1>
 
           <p className="mt-2 text-lg text-gray-600 ">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit...
+            {description}
           </p>
           <p className="mt-6 text-sm font-bold text-gray-600 ">
             Buyer Details:
