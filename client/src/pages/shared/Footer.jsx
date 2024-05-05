@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import logo from '../../assets/images/logo.png';
 
 const Footer = () => {
@@ -6,20 +7,19 @@ const Footer = () => {
       <hr />
       <div className="container px-6 py-8 mx-auto">
         <div className="flex flex-col items-center text-center">
-          <div className="flex gap-2 items-center">
+          <Link to={'/'} className="flex gap-2 items-center">
             <img className="w-auto h-7" src={logo} alt="" />
             <span>SoloSphere</span>
-          </div>
+          </Link>
 
           <div className="flex flex-wrap justify-center mt-6 -mx-4">
-            <a
-              href="#"
+            <Link to={'/'}
               className="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-blue-500 "
               aria-label="Reddit"
             >
               {" "}
               Home{" "}
-            </a>
+            </Link>
 
             <a
               href="#"
