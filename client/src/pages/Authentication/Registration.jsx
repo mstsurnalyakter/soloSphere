@@ -5,8 +5,7 @@ import useContextData from "../../hooks/useContextData";
 import toast from "react-hot-toast";
 
 const Registration = () => {
-
-  const { createUser, signInWithGoogle } = useContextData();
+  const { createUser, signInWithGoogle, updateUserProfile } = useContextData();
   const navigate = useNavigate();
 
   const handleGoogleSignIn = async () =>{
