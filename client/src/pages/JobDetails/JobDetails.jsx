@@ -5,6 +5,8 @@ import { useLoaderData } from "react-router-dom";
 import useContextData from "../../hooks/useContextData";
 import { useState } from "react";
 import axios from "axios"
+import toast from "react-hot-toast";
+
 const JobDetails = () => {
   const job = useLoaderData();
   const { user } = useContextData();
@@ -24,6 +26,13 @@ const JobDetails = () => {
 
   const handleForm = async (e) => {
     e.preventDefault();
+
+
+    if (user?.email === buyer_email) {
+      toast.error("Action not permitted.");
+      return;
+    }
+
     const form = e.target;
     const price = parseFloat(form.price.value);
     const email = user?.email;
@@ -32,6 +41,19 @@ const JobDetails = () => {
     const status = "Pending";
 
     const deadline =startDate;
+
+
+    if (price < parseFloat(minPrice)){
+       toast.error("offer more or at least equal");
+       return
+    }
+
+
+    if (price > parseFloat(maxPrice)){
+       toast.error("offer most be less than or equal Maximum Price.");
+       return;
+    }
+
 
     const bidsInfo = {
       jobId,
@@ -52,9 +74,9 @@ const JobDetails = () => {
         `${import.meta.env.VITE_API_URL}/bids`,
         bidsInfo
       );
-      console.log(data);
+     toast.success("Successfully Bid!");
     } catch (error) {
-      console.error(error.message)
+      toast.error(error.message)
     }
 
   };
