@@ -45,6 +45,14 @@ async function run() {
         res.send(result);
     })
 
+     app.post("/jobs", async (req, res) => {
+       const result = await jobCollection.insertOne(req.body);
+       res.send(result);
+     });
+
+
+
+
 
     app.post("/bids", async(req,res)=>{
       const result = await bidCollection.insertOne(req.body);
