@@ -49,6 +49,11 @@ async function run() {
         res.send(result);
     })
 
+    app.delete("/jobs/:id", async (req,res)=>{
+      const result = await jobCollection.deleteOne({_id: new ObjectId(req.params.id)});
+      res.send(result)
+    })
+
      app.post("/jobs", async (req, res) => {
        const result = await jobCollection.insertOne(req.body);
        res.send(result);
