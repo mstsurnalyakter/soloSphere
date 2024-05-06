@@ -1,5 +1,4 @@
 import DatePicker from "react-datepicker";
-
 import "react-datepicker/dist/react-datepicker.css";
 import { useLoaderData } from "react-router-dom";
 import useContextData from "../../hooks/useContextData";
@@ -74,7 +73,11 @@ const JobDetails = () => {
         `${import.meta.env.VITE_API_URL}/bids`,
         bidsInfo
       );
-     toast.success("Successfully Bid!");
+      
+      if (data.insertedId) {
+          toast.success("Successfully Bid!");
+      }
+
     } catch (error) {
       toast.error(error.message)
     }
