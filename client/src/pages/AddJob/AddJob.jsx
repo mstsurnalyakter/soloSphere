@@ -4,7 +4,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import useContextData from "../../hooks/useContextData";
 
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+
 const AddJob = () => {
+
+  const navigate = useNavigate()
 
    const [startDate, setStartDate] = useState(new Date());
    const { user } = useContextData();
@@ -14,32 +20,45 @@ const AddJob = () => {
 
 
        const form = e.target;
-       const jobTitle = form.jobTitle.value;
-       const description = form.description.value;
-       const minPrice = form.minPrice.value;
-       const maxPrice = form.maxPrice.value;
-       const category = form.category.value;
-       const buyer_email = user?.email
-       const deadline = startDate;
+
+        const deadline = startDate;
+         const category = form.category.value;
+          const minPrice = parseFloat(form.minPrice.value);
+          const maxPrice = parseFloat(form.maxPrice.value);
+         const jobTitle = form.jobTitle.value;
+         const description = form.description.value;
 
 
+       const jobInfo ={
+        jobTitle,
+        deadline,
+        category,
+        minPrice,
+        maxPrice,
+        description,
+        buyer:{
+          email:user?.email,
+          name:user?.displayName,
+          photo:user?.photoURL
+        }
+       }
 
 
+       try {
+         const { data } = await axios.post(
+           `${import.meta.env.VITE_API_URL}/jobs`,
+           jobInfo
+         );
+
+         if (data.insertedId) {
+           toast.success("Post Job successfully");
+           navigate("/my-posted-job");
+         }
+       } catch (error) {
+         toast.error(error.message);
+       }
 
 
-
-    //    try {
-    //      const { data } = await axios.post(
-    //        `${import.meta.env.VITE_API_URL}/bids`,
-    //        bidsInfo
-    //      );
-
-    //      if (data.insertedId) {
-    //        toast.success("Successfully Bid!");
-    //      }
-    //    } catch (error) {
-    //      toast.error(error.message);
-    //    }
      };
 
 
