@@ -4,7 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useLoaderData } from "react-router-dom";
 import useContextData from "../../hooks/useContextData";
 import { useState } from "react";
-
+import axios from "axios"
 const JobDetails = () => {
   const job = useLoaderData();
   const { user } = useContextData();
@@ -32,7 +32,7 @@ const JobDetails = () => {
     const status = "Pending";
 
     const deadline =startDate;
-    
+
     const bidsInfo = {
       jobId,
       price,
@@ -44,7 +44,19 @@ const JobDetails = () => {
       buyer_email,
       status,
     };
-    console.log(bidsInfo);
+
+
+
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL}/bids`,
+        bidsInfo
+      );
+      console.log(data);
+    } catch (error) {
+      console.error(error.message)
+    }
+
   };
 
   return (
