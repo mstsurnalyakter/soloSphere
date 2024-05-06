@@ -44,7 +44,7 @@ async function run() {
         const result = await jobCollection.findOne({_id: new ObjectId(req.params.id)});
         res.send(result);
     })
-    app.get("/jobs/:email", async(req,res)=>{
+    app.get("/myJobs/:email", async(req,res)=>{
         const result = await jobCollection.find({ "buyer.email": req.params.email }).toArray();
         res.send(result);
     })
