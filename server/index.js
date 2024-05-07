@@ -44,15 +44,26 @@ async function run() {
         const result = await jobCollection.findOne({_id: new ObjectId(req.params.id)});
         res.send(result);
     })
-    app.get("/myJobs/:email", async(req,res)=>{
-        const result = await jobCollection.find({ "buyer.email": req.params.email }).toArray();
-        res.send(result);
-    })
 
-    app.delete("/jobs/:id", async (req,res)=>{
-      const result = await jobCollection.deleteOne({_id: new ObjectId(req.params.id)});
-      res.send(result)
-    })
+      app.get("/jobs", async (req, res) => {
+        let query = {};
+        if (req.query?.email) {
+          query={"buyer.email":req.query?.email}
+        }
+        const result = await jobCollection
+          .find(query)
+          .toArray();
+        res.send(result);
+      });
+
+      app.delete("/jobs/:id", async (req, res) => {
+        // const id = req.params.id;
+        // const query = { _id: new ObjectId(id) };
+        const result = await jobCollection.deleteOne({
+          _id: new ObjectId(req.params.id)
+        });
+        res.send(result);
+      });
 
      app.post("/jobs", async (req, res) => {
        const result = await jobCollection.insertOne(req.body);

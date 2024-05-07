@@ -5,10 +5,10 @@ import useContextData from "./useContextData";
 const useMyPostedJobs = () => {
   const {user} = useContextData()
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ["jobs"],
+    queryKey: ["myJobs"],
     queryFn: async () => {
       const { data } = await axios(
-        `${import.meta.env.VITE_API_URL}/myJobs/${user?.email}`
+        `${import.meta.env.VITE_API_URL}/jobs/${user?.email}`
       );
       return data;
     },
