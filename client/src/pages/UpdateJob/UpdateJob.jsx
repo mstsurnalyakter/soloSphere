@@ -1,74 +1,83 @@
 import { useState } from "react";
+import useContextData from "../../hooks/useContextData";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import useContextData from "../../hooks/useContextData";
-
-import axios from "axios";
+import { useLoaderData, useNavigate } from "react-router";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const AddJob = () => {
+const UpdateJob = () => {
 
-  const navigate = useNavigate()
+     const job = useLoaderData();
 
-   const [startDate, setStartDate] = useState(new Date());
-   const { user } = useContextData();
-
-     const handleForm = async (e) => {
-       e.preventDefault();
-
-
-       const form = e.target;
-
-        const deadline = startDate;
-         const category = form.category.value;
-          const minPrice = parseFloat(form.minPrice.value);
-          const maxPrice = parseFloat(form.maxPrice.value);
-         const jobTitle = form.jobTitle.value;
-         const description = form.description.value;
-
-
-       const jobInfo ={
+      const {
+        _id,
         jobTitle,
-        deadline,
-        category,
+        description,
         minPrice,
         maxPrice,
-        description,
-        buyer:{
-          email:user?.email,
-          name:user?.displayName,
-          photo:user?.photoURL
-        }
-       }
+        category,
+        deadline,
+      } = job || {};
 
+    const navigate = useNavigate()
+
+    const {user} = useContextData();
+    const [startDate, setStartDate] = useState(new Date(deadline || new Date()));
+
+
+
+
+    const handleUpdate = async e =>{
+
+        e.preventDefault();
+
+        const form = e.target;
+         const jobTitle = form.jobTitle.value;
+         const email = form.email.value;
+        const deadline = startDate;
+        const category = form.category.value;
+        const minPrice = parseFloat(form.minPrice.value);
+        const maxPrice = parseFloat(form.maxPrice.value);
+        const description = form.description.value;
+
+        const jobInfo = {
+          jobTitle,
+          deadline,
+          category,
+          minPrice,
+          maxPrice,
+          description,
+          buyer:{
+            email,
+            name:user?.displayName,
+            photo:user?.photoURL
+          }
+        };
 
        try {
-         const { data } = await axios.post(
-           `${import.meta.env.VITE_API_URL}/jobs`,
-           jobInfo
-         );
+        const {data} = await axios.put(`${import.meta.env.VITE_API_URL}/jobs/${_id}`,jobInfo);
+        if (data.modifiedCount > 0) {
+            toast.success("Successful job update");
+            navigate("/my-posted-job");
+        }
 
-         if (data.insertedId) {
-           toast.success("Post Job successfully");
-           navigate("/my-posted-job");
-         }
        } catch (error) {
-         toast.error(error.message);
+        toast.error(error.message)
        }
 
 
-     };
+    }
 
 
   return (
     <div className="flex justify-center items-center min-h-[calc(100vh-306px)] my-12">
       <section className=" p-2 md:p-6 mx-auto bg-white rounded-md shadow-md ">
         <h2 className="text-lg font-semibold text-gray-700 capitalize ">
-          Post a Job
+          Update a Job
         </h2>
 
-        <form onSubmit={handleForm}>
+        <form onSubmit={handleUpdate}>
           <div className="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
             <div>
               <label className="text-gray-700 " htmlFor="jobTitle">
@@ -77,6 +86,7 @@ const AddJob = () => {
               <input
                 id="jobTitle"
                 name="jobTitle"
+                defaultValue={jobTitle}
                 type="text"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
               />
@@ -114,6 +124,7 @@ const AddJob = () => {
                 name="category"
                 id="category"
                 className="border p-2 rounded-md"
+                 defaultValue={category}
               >
                 <option value="Web Development">Web Development</option>
                 <option value="Graphics Design">Graphics Design</option>
@@ -128,6 +139,7 @@ const AddJob = () => {
                 id="minPrice"
                 name="minPrice"
                 type="number"
+                 defaultValue={minPrice}
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
               />
             </div>
@@ -140,6 +152,7 @@ const AddJob = () => {
                 id="maxPrice"
                 name="maxPrice"
                 type="number"
+                 defaultValue={maxPrice}
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
               />
             </div>
@@ -152,10 +165,14 @@ const AddJob = () => {
               className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
               name="description"
               id="description"
+               defaultValue={description}
             ></textarea>
           </div>
           <div className="flex justify-end mt-6">
-            <button type="submit" className="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transhtmlForm bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
+            <button
+              type="submit"
+              className="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transhtmlForm bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600"
+            >
               Save
             </button>
           </div>
@@ -165,4 +182,4 @@ const AddJob = () => {
   );
 };
 
-export default AddJob;
+export default UpdateJob;

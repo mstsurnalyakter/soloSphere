@@ -70,6 +70,21 @@ async function run() {
        res.send(result);
      });
 
+     app.put("/jobs/:id", async(req,res)=>{
+      const filter =  {
+          _id: new ObjectId(req.params.id),
+        };
+
+        const updateDoc =  {
+          $set: { ...req.body },
+        };
+
+        const options = { upsert: true };
+
+      const result = await jobCollection.updateOne(filter,updateDoc,options );
+      res.send(result)
+     })
+
 
 
 
