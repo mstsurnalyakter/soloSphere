@@ -43,7 +43,7 @@ const MyPostedJobs = () => {
        confirmButtonText: "Yes, delete it!",
      }).then((result) => {
        if (result.isConfirmed) {
-         fetch(`http://localhost:5000/jobs/${id}`, {
+         fetch(`${import.meta.env.VITE_API_URL}/jobs/${id}`, {
            method: "DELETE",
          })
            .then((res) => res.json())
@@ -54,8 +54,8 @@ const MyPostedJobs = () => {
                  text: "Craft Item has been deleted.",
                  icon: "success",
                });
-                const remaining = jobs.filter((job) => job._id !== id);
-                setJobs(remaining);
+               const remaining = jobs.filter((job) => job._id !== id);
+               setJobs(remaining);
              }
            })
            .catch((error) => toast.error(error.message));
