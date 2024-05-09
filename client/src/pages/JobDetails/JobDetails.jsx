@@ -1,6 +1,6 @@
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import useContextData from "../../hooks/useContextData";
 import { useState } from "react";
 import axios from "axios"
@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 const JobDetails = () => {
   const job = useLoaderData();
   const { user } = useContextData();
+  const navigate = useNavigate();
 
    const [startDate, setStartDate] = useState(new Date());
 
@@ -86,6 +87,7 @@ const JobDetails = () => {
 
       if (data.insertedId) {
           toast.success("Successfully Bid!");
+          navigate("/my-bids");
       }
 
     } catch (error) {

@@ -58,6 +58,9 @@ const Navbar = () => {
               <li>
                 <Link to={"/bid-requests"}>Bid Requests</Link>
               </li>
+              <li>
+                <Link to={"/all-jobs"}>Bid Requests</Link>
+              </li>
               <li className="mt-2">
                 <button
                   onClick={logOut}

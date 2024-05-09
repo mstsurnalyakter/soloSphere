@@ -1,43 +1,54 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import registration from '../../assets/images/register.jpg';
 import logo from '../../assets/images/logo.png'
 import useContextData from "../../hooks/useContextData";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 const Registration = () => {
-  const { createUser, signInWithGoogle, updateUserProfile,setUser,user } = useContextData();
+  const { createUser, signInWithGoogle,loading, updateUserProfile, setUser, user } =
+    useContextData();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location?.state || "/";
+
+  //  useEffect(() => {
+  //    if (user) {
+  //      navigate("/");
+  //    }
+  //  }, [navigate, user]);
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const email = form.email.value;
+    const name = form.name.value;
+    const photo = form.photo.value;
+    const password = form.password.value;
 
 
-  const handleSignUp = async e =>{
-     e.preventDefault();
-     const form = e.target;
-     const email = form.email.value;
-     const name = form.name.value;
-     const photo = form.photo.value;
-     const password = form.password.value;
     try {
-      await createUser(email,password);
-      await updateUserProfile(name,photo);
-      setUser({...user,photoURL:photo,displayName:name});
-      navigate("/");
+      await createUser(email, password);
+      await updateUserProfile(name, photo);
+      setUser({ ...user, photoURL: photo, displayName: name });
+     navigate(from);
       toast.success("SignUp Successful");
-
     } catch (error) {
-      toast.error(error?.message)
+      toast.error(error?.message);
     }
-  }
+  };
 
-  const handleGoogleSignIn = async () =>{
-   try {
-     await signInWithGoogle();
-     toast.success("SignIn with Google Successful");
-     navigate("/");
-   } catch (error) {
-    toast.error(error?.message)
-   }
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithGoogle();
+      toast.success("SignIn with Google Successful");
+      navigate(from);
+    } catch (error) {
+      toast.error(error?.message);
+    }
+  };
 
-  }
+    // if (user || loading) return;
 
   return (
     <div className="flex justify-center items-center min-h-[calc(100vh-306px)]">

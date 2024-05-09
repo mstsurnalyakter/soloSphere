@@ -32,67 +32,96 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-
     const jobCollection = client.db("soloSphere").collection("jobs");
     const bidCollection = client.db("soloSphere").collection("bids");
 
-    app.get("/jobs", async(req,res)=>{
-        const result = await jobCollection.find().toArray();
-        res.send(result);
-    })
-    app.get("/jobs/:id", async(req,res)=>{
-        const result = await jobCollection.findOne({_id: new ObjectId(req.params.id)});
-        res.send(result);
-    })
-
-      app.get("/jobs", async (req, res) => {
-        let query = {};
-        if (req.query?.email) {
-          query={"buyer.email":req.query?.email}
-        }
-        const result = await jobCollection
-          .find(query)
-          .toArray();
-        res.send(result);
+    app.get("/jobs", async (req, res) => {
+      const result = await jobCollection.find().toArray();
+      res.send(result);
+    });
+    app.get("/jobs/:id", async (req, res) => {
+      const result = await jobCollection.findOne({
+        _id: new ObjectId(req.params.id),
       });
+      res.send(result);
+    });
 
-      app.delete("/jobs/:id", async (req, res) => {
-        // const id = req.params.id;
-        // const query = { _id: new ObjectId(id) };
-        const result = await jobCollection.deleteOne({
-          _id: new ObjectId(req.params.id)
-        });
-        res.send(result);
+    app.get("/myJobs/:email", async (req, res) => {
+      // let query = {};
+      // if (req.query?.email) {
+      //   query = { "buyer.email": req.params.email };
+      // }
+      const result = await jobCollection
+        .find({ "buyer.email": req.params.email })
+        .toArray();
+      res.send(result);
+    });
+
+    app.delete("/jobs/:id", async (req, res) => {
+      // const id = req.params.id;
+      // const query = { _id: new ObjectId(id) };
+      const result = await jobCollection.deleteOne({
+        _id: new ObjectId(req.params.id),
       });
+      res.send(result);
+    });
 
-     app.post("/jobs", async (req, res) => {
-       const result = await jobCollection.insertOne(req.body);
-       res.send(result);
-     });
+    app.post("/jobs", async (req, res) => {
+      const result = await jobCollection.insertOne(req.body);
+      res.send(result);
+    });
 
-     app.put("/jobs/:id", async(req,res)=>{
-      const filter =  {
-          _id: new ObjectId(req.params.id),
-        };
+    app.put("/jobs/:id", async (req, res) => {
+      const filter = {
+        _id: new ObjectId(req.params.id),
+      };
 
-        const updateDoc =  {
-          $set: { ...req.body },
-        };
+      const updateDoc = {
+        $set: { ...req.body },
+      };
 
-        const options = { upsert: true };
+      const options = { upsert: true };
 
-      const result = await jobCollection.updateOne(filter,updateDoc,options );
-      res.send(result)
-     })
+      const result = await jobCollection.updateOne(filter, updateDoc, options);
+      res.send(result);
+    });
 
-
-
-
-
-    app.post("/bids", async(req,res)=>{
+    app.post("/bids", async (req, res) => {
       const result = await bidCollection.insertOne(req.body);
+      res.send(result);
+    });
+
+    //get all bids for a user by email
+
+    app.get("/my-bids/:email", async (req, res) => {
+      const result = await bidCollection
+        .find({ email: req.params.email })
+        .toArray();
+      res.send(result);
+    });
+
+    //get all bids request for a user by email
+    app.get("/bids-request/:email", async (req, res) => {
+      const result = await bidCollection
+        .find({ "buyer.email": req.params.email })
+        .toArray();
+      res.send(result);
+    });
+
+
+
+
+    // update status
+    app.patch("/bid/:id", async(req,res)=>{
+      const query= {_id:new ObjectId(req.params.id)};
+      const status = req.body;
+      const updateDoc = {
+        $set:status
+      }
+      const result = await bidCollection.updateOne(query,updateDoc);
       res.send(result)
     })
+
 
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
