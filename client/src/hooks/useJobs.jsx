@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios"
+import useAxiosSecure from "./useAxiosSecure";
 
 const useJobs = () => {
-  const { data, isLoading, refetch } = useQuery({
+  const axiosSecure = useAxiosSecure();
+  const { data=[], isLoading, refetch } = useQuery({
     queryKey: ["jobs"],
     queryFn: async () => {
-      const {data }= await axios(`${import.meta.env.VITE_API_URL}/jobs`);
+      const {data }= await axiosSecure(`/jobs`);
       return data;
     },
   });

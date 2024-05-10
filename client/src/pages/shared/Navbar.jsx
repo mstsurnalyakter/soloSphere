@@ -1,9 +1,15 @@
 import { Link, NavLink } from 'react-router-dom';
 import logo from '../../assets/images/logo.png'
 import useContextData from '../../hooks/useContextData';
+import toast from 'react-hot-toast';
 
 const Navbar = () => {
     const { user, logOut } = useContextData();
+    const handleLogOut = () =>{
+      logOut()
+      .then(()=>{})
+      .catch(error=>toast.error(error.message))
+    }
   return (
     <div className="navbar bg-base-100 shadow-sm container px-4 mx-auto">
       <div className="flex-1">
@@ -16,6 +22,9 @@ const Navbar = () => {
         <ul className="menu menu-horizontal px-1">
           <li>
             <NavLink to={"/"}>Home</NavLink>
+          </li>
+          <li>
+            <NavLink to={"/all-jobs"}>AllJobs</NavLink>
           </li>
 
           {!user && (
@@ -50,10 +59,10 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link to={'/my-posted-job'}>My Posted Jobs</Link>
+                <Link to={"/my-posted-job"}>My Posted Jobs</Link>
               </li>
               <li>
-                <Link to={'/my-bids'}>My Bids</Link>
+                <Link to={"/my-bids"}>My Bids</Link>
               </li>
               <li>
                 <Link to={"/bid-requests"}>Bid Requests</Link>
@@ -63,7 +72,7 @@ const Navbar = () => {
               </li>
               <li className="mt-2">
                 <button
-                  onClick={logOut}
+                  onClick={handleLogOut}
                   className="bg-gray-200 block text-center"
                 >
                   Logout

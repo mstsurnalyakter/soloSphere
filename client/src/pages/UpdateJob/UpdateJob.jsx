@@ -5,8 +5,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useLoaderData, useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import axios from "axios";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const UpdateJob = () => {
+    const axiosSecure = useAxiosSecure();
 
      const job = useLoaderData();
 
@@ -56,7 +58,7 @@ const UpdateJob = () => {
         };
 
        try {
-        const {data} = await axios.put(`${import.meta.env.VITE_API_URL}/jobs/${_id}`,jobInfo);
+        const {data} = await axiosSecure.put(`/jobs/${_id}`,jobInfo);
         if (data.modifiedCount > 0) {
             toast.success("Successful job update");
             navigate("/my-posted-job");

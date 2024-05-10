@@ -92,6 +92,10 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      {
+        path: "/all-jobs",
+        element:<AllJobs/>
+      },
     ],
   },
 ]);

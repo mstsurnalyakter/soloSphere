@@ -6,23 +6,26 @@ import toast from "react-hot-toast";
 import useContextData from "../../hooks/useContextData";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 
 
 const MyPostedJobs = () => {
 
+  const axiosSecure = useAxiosSecure();
+
   const { user } = useContextData();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const url = `${import.meta.env.VITE_API_URL}/myJobs/${user?.email}`;
+  const url = `/myJobs/${user?.email}`;
   // const url = `http://localhost:5000/jobs?email=${user?.email}`;
 
   useEffect(() => {
     const getData = async () => {
       try {
         setLoading(true);
-        const { data } = await axios.get(url);
+        const { data } = await axiosSecure(url);
         setJobs(data);
         setLoading(false);
       } catch (error) {
@@ -30,7 +33,7 @@ const MyPostedJobs = () => {
       }
     };
     getData();
-  }, [url]);
+  }, [axiosSecure,url]);
 
   const handleDelete =  id =>{
 

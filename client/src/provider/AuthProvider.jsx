@@ -13,6 +13,8 @@ import {
 
 import app  from "../firebase/firebase.config";
 import PropTypes from "prop-types";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 
 export const AuthContext = createContext(null);
@@ -39,7 +41,7 @@ const AuthProvider = ({ children }) => {
   };
 
   const logOut = async () => {
-    setLoading(true);
+    setUser(null)
     return signOut(auth);
   };
 
@@ -53,14 +55,33 @@ const AuthProvider = ({ children }) => {
   // onAuthStateChange
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      console.log("CurrentUser-->", currentUser);
+        const userEmail = currentUser?.email || user?.email;
+        const loggedUser = {email:userEmail}
+      if (currentUser) {
+           setUser(currentUser);
+           console.log("CurrentUser-->", currentUser);
+
+           axios.post("http://localhost:5000/jwt",loggedUser,{withCredentials:true})
+           .then(res=>{
+            console.log(res.data);
+           })
+           .catch(error=>{
+            toast.error(error.message)
+           })
+      }else{
+         axios.post("http://localhost:5000/logout", loggedUser, {
+           withCredentials: true,
+         })
+         .then(res=>console.log(res.data))
+         .catch(error=>toast.error(error.message))
+      }
+
       setLoading(false);
     });
     return () => {
       return unsubscribe();
     };
-  }, []);
+  }, [user?.email]);
 
   const authInfo = {
     user,

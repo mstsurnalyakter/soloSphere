@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import useContextData from "../../hooks/useContextData";
 import axios from "axios";
 import toast from "react-hot-toast";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const MyBids = () => {
+    const axiosSecure = useAxiosSecure();
 
   const [bids,setBids] = useState([])
   const { user } = useContextData();
@@ -13,13 +15,13 @@ const MyBids = () => {
   const [loading, setLoading] = useState(false);
 
   // const url = `http://localhost:5000/my-bids/${user?.email}`;
-    const url = `${import.meta.env.VITE_API_URL}/my-bids/${user?.email}`;
+    const url = `/my-bids/${user?.email}`;
 
   useEffect(() => {
     const getData = async () => {
       try {
         setLoading(true);
-        const { data } = await axios.get(url);
+        const { data } = await axiosSecure(url);
         setBids(data);
         setLoading(false);
       } catch (error) {
@@ -27,7 +29,7 @@ const MyBids = () => {
       }
     };
     getData();
-  }, [url]);
+  }, [url,axiosSecure]);
 
  const handleStatus = async (id, status) => {
    try {

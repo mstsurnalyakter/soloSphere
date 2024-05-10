@@ -4,7 +4,7 @@ import useContextData from "./useContextData";
 
 const useMyPostedJobs = () => {
   const {user} = useContextData()
-  const { data, isLoading, refetch } = useQuery({
+  const { data=[], isLoading, refetch } = useQuery({
     queryKey: ["myJobs"],
     queryFn: async () => {
       const { data } = await axios(
