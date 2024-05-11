@@ -5,13 +5,15 @@ import { Link } from "react-router-dom";
 const JobCard = ({ job }) => {
   const {
     _id,
-     jobTitle,
+    jobTitle,
     description,
-     minPrice,
+    minPrice,
     maxPrice,
     category,
     deadline,
+    bid_count,
   } = job || {};
+  console.log(bid_count);
   return (
     <Link
       to={`/job/${_id}`}
@@ -36,6 +38,9 @@ const JobCard = ({ job }) => {
         </p>
         <p className="mt-2 text-sm font-bold text-gray-600 ">
           Range: ${minPrice} - $1{maxPrice}
+        </p>
+        <p className="mt-2 text-sm font-bold text-gray-600 ">
+          Bids Count: {bid_count}
         </p>
       </div>
     </Link>

@@ -18,6 +18,7 @@ const corsOptions = {
 //middleware setup
 app.use(express.json());
 app.use(cors(corsOptions));
+
 app.use(cookieParser());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.jimwvxl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -141,6 +142,25 @@ async function run() {
       }
 
       const result = await bidCollection.insertOne(bidData);
+
+      //update bid count in jobs collection
+      // update bid count in jobs collection
+      const updateDoc = {
+        $inc: { bid_count: 1 },
+      };
+      const jobQuery = { _id: new ObjectId(bidData.jobId) };
+      const updateBidCount = await jobCollection.updateOne(
+        jobQuery,
+        updateDoc
+      );
+      console.log(updateBidCount);
+      // const updateDoc = {
+      //   $inc: { bidCount:1 } ,
+      // };
+      // const jobQuery = {_id: new ObjectId(bidData.jobId)}
+      // console.log(jobQuery);
+      // const updateBidCount = await jobCollection.updateOne(jobQuery,updateDoc)
+      // console.log(updateBidCount);
       res.send(result);
     });
 

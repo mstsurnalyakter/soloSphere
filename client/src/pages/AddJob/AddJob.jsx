@@ -28,19 +28,21 @@ const AddJob = () => {
          const description = form.description.value;
 
 
-       const jobInfo ={
-        jobTitle,
-        deadline,
-        category,
-        minPrice,
-        maxPrice,
-        description,
-        buyer:{
-          email:user?.email,
-          name:user?.displayName,
-          photo:user?.photoURL
-        }
-       }
+
+       const jobInfo = {
+         jobTitle,
+         deadline,
+         category,
+         minPrice,
+         maxPrice,
+         description,
+         buyer: {
+           email: user?.email,
+           name: user?.displayName,
+           photo: user?.photoURL,
+         },
+         bid_count: 0,
+       };
 
 
        try {
